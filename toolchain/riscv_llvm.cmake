@@ -13,10 +13,10 @@ set(CMAKE_AR ${COMPILER})
 set(CMAKE_ASM_COMPILER ${COMPILER})
 set(CMAKE_CXX_COMPILER ${COMPILER})
 
-set(COMMON_FLAGS "--target=riscv64 -mcmodel=medany -march=${CMAKE_SYSTEM_PROCESSOR} -nostdlib -ffreestanding -fno-exceptions -fno-inline -Wall -Wextra -Wpedantic")
+set(COMMON_FLAGS "--target=riscv64 -mcmodel=medany -march=${CMAKE_SYSTEM_PROCESSOR} -nostdlib -ffreestanding -fno-exceptions -Wall -Wextra -Wpedantic")
 
 if (CMAKE_BUILD_TYPE STREQUAL "debug")
-    set(COMMON_FLAGS "${COMMON_FLAGS} -ggdb -g3 -O0")
+    set(COMMON_FLAGS "${COMMON_FLAGS} -ggdb -g3 -Og")
 elseif(CMAKE_BUILD_TYPE STREQUAL "release")
     set(COMMON_FLAGS "${COMMON_FLAGS} -O3")
 endif()

@@ -6,7 +6,7 @@ set(NOX_SOURCES ${NOX_ASM} ${NOX_CXX})
 
 add_executable(${PROJECT_NAME} ${NOX_SOURCES})
 
-target_include_directories(${PROJECT_NAME} PRIVATE std)
+target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 set_target_properties(
     ${PROJECT_NAME} PROPERTIES
     CXX_STANDARD 20

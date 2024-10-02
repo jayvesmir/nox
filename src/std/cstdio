@@ -1,0 +1,17 @@
+#pragma once
+#include "std/cstdint"
+#include "std/impl/formatters.hpp"
+
+namespace std {
+    void putc(char c);
+    void puts(const char* str);
+    void puts_n(const char* str, uint64_t n);
+    void printf(const char* fmt, ...);
+    void vprintf(const char* fmt, __builtin_va_list args);
+} // namespace std
+
+namespace std {
+    template <typename T> auto format_to(char* buf, uint64_t capacity, const T& value, const auto&... extra_args) {
+        return std::formatter<T>()(buf, capacity, value, extra_args...);
+    }
+} // namespace std

@@ -10,8 +10,12 @@ using intptr_t = long;
 
 using uint8_t  = unsigned char;
 using uint16_t = unsigned short;
-using uint32_t = unssigned int;
+using uint32_t = unsigned int;
 using uint64_t = unsigned long long;
 
 using uintmax_t = uint64_t;
 using uintptr_t = unsigned long;
+using uintreg_t = unsigned long;
+
+using int128_t  = __int128;
+using uint128_t = unsigned __int128;

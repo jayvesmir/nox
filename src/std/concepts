@@ -1,0 +1,51 @@
+#pragma once
+#include "std/cstdint"
+
+#define true_concept(CONCEPT, type)    \
+    template <> struct CONCEPT<type> { \
+        enum { value = 1 };            \
+    };
+
+namespace std {
+    namespace detail {
+        template <typename T> struct is_integral {
+            enum : bool { value = 0 };
+        };
+
+        template <typename T> struct is_signed {
+            enum : bool { value = 0 };
+        };
+
+        true_concept(is_integral, int8_t);
+        true_concept(is_integral, int16_t);
+        true_concept(is_integral, int32_t);
+        true_concept(is_integral, int64_t);
+        true_concept(is_integral, int128_t);
+        true_concept(is_integral, intptr_t);
+
+        true_concept(is_signed, int8_t);
+        true_concept(is_signed, int16_t);
+        true_concept(is_signed, int32_t);
+        true_concept(is_signed, int64_t);
+        true_concept(is_signed, int128_t);
+        true_concept(is_signed, intptr_t);
+
+        true_concept(is_integral, uint8_t);
+        true_concept(is_integral, uint16_t);
+        true_concept(is_integral, uint32_t);
+        true_concept(is_integral, uint64_t);
+        true_concept(is_integral, uint128_t);
+        true_concept(is_integral, uintptr_t);
+    } // namespace detail
+
+    template <typename T>
+    concept is_integral = detail::is_integral<T>::value == 1;
+
+    template <typename T>
+    concept is_signed_integral = detail::is_signed<T>::value == 1 && detail::is_integral<T>::value == 1;
+
+    template <typename T>
+    concept is_unsigned_integral = detail::is_signed<T>::value == 0 && detail::is_integral<T>::value == 1;
+} // namespace std
+
+#undef true_concept
