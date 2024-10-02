@@ -31,7 +31,7 @@ SECTIONS {
 
         *(.bss) *(.bss.*)
         *(.sbss) *(.sbss.*)
-        . = ALIGN(8);
+        . = ALIGN(32);
 
         cabi_bss_end = .;
     } > ram AT > ram :bss
