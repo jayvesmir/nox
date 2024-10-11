@@ -27,7 +27,7 @@ cabi_entry:
     la sp, cabi_stack_end # load the top of the stack to sp
 
     # ensure we're in machine mode when we enter cabi_main
-    li t0, (3 << 11)
+    li t0, (3 << 11) | (1 << 7) | (1 << 5)
     csrw mstatus, t0
     
     call setup_exception_vectors
