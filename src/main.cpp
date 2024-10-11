@@ -1,4 +1,5 @@
 #include "arch/csr.hpp"
+#include "arch/interrupts.hpp"
 #include "arch/processor.hpp"
 #include "cabi.hpp"
 #include "std/cstdint"
@@ -34,10 +35,10 @@ extern "C" {
     init::setup_serial_console();
 
     // setup exception vectors
-    csr::write<csr::CSR_M_TVEC>(reinterpret_cast<uintreg_t>(cabi_mtvec));
-    csr::write<csr::CSR_S_TVEC>(reinterpret_cast<uintreg_t>(cabi_stvec));
+    csr::write<csr::CSR_M_TVEC>(reinterpret_cast<uintreg_t>(interrupt_handlers::machine_trap));
+    csr::write<csr::CSR_S_TVEC>(reinterpret_cast<uintreg_t>(interrupt_handlers::supervisor_trap));
 
-    csr::set_bits<csr::CSR_M_STATUS>(1 << 11); // set MPP to supervisor
+    csr::set_bits<csr::CSR_M_STATUS>(3 << 11); // set MPP to supervisor
     csr::set_bits<csr::CSR_M_STATUS>(1 << 7); // enable machine interrupts
     csr::set_bits<csr::CSR_M_STATUS>(1 << 5); // enable supervisor interrupts
 

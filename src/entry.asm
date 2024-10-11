@@ -2,9 +2,6 @@
 .global cabi_mmain
 .global cabi_die
 
-.global cabi_mtvec
-.global cabi_stvec
-
 .section .text
 cabi_die:
     wfi
