@@ -18,10 +18,28 @@ namespace init {
     }
 } // namespace init
 
+void main() {
+    std::printf("\n+ nox started +\n");
+    std::printf("* formatting test *\n- %p %i32 %i64 %x32 %x64 %f32 %f64\n", main, (-1), (-1ll), (-1), (-1ull), -1.0f, -1.0);
+
+    cabi_die();
+}
+
 extern "C" {
-[[clang::noinline]] void cabi_main() {
+[[clang::noinline]] void cabi_mmain() {
+    if (csr::read<csr::CSR_M_HART_ID>() != 0)
+        cabi_die();
+
     init::clear_bss();
     init::setup_serial_console();
+
+    // setup exception vectors
+    csr::write<csr::CSR_M_TVEC>(reinterpret_cast<uintreg_t>(cabi_mtvec));
+    csr::write<csr::CSR_S_TVEC>(reinterpret_cast<uintreg_t>(cabi_stvec));
+
+    csr::set_bits<csr::CSR_M_STATUS>(1 << 11); // set MPP to supervisor
+    csr::set_bits<csr::CSR_M_STATUS>(1 << 7); // enable machine interrupts
+    csr::set_bits<csr::CSR_M_STATUS>(1 << 5); // enable supervisor interrupts
 
     if (processor::ext::supports_f()) {
         processor::ext::enable_f();
@@ -33,9 +51,7 @@ extern "C" {
         std::printf("* enabled V extension: VLEN=%i64\n", csr::read<csr::CSR_VLENB>() * 8);
     }
 
-    std::printf("\n+ nox started +\n");
-    std::printf("* formatting test *\n- %p %i32 %i64 %x32 %x64 %f32 %f64\n", cabi_main, (-1), (-1ll), (-1), (-1ull), -1.0f, -1.0);
-
-    cabi_die();
+    csr::write<csr::CSR_M_EPC>(reinterpret_cast<uintreg_t>(main));
+    asm volatile("mret");
 }
 }

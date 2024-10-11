@@ -2,7 +2,7 @@
 #include "std/cstdint"
 
 extern "C" {
-extern void cabi_main();
+extern void cabi_mmain();
 extern void cabi_entry();
 extern void cabi_die();
 

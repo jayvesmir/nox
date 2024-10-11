@@ -3,8 +3,13 @@
 
 namespace csr {
     enum csr_register {
-        CSR_MISA = 0x10000000,
-        CSR_MSTATUS,
+        CSR_M_ISA = 0x10000000,
+        CSR_M_HART_ID,
+        CSR_M_STATUS,
+        CSR_M_TVEC,
+        CSR_M_EPC,
+
+        CSR_S_TVEC = 0x20000000,
 
         CSR_VLENB = 0x80000000,
     };
