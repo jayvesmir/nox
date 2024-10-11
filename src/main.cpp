@@ -34,6 +34,7 @@ extern "C" {
     }
 
     std::printf("\n+ nox started +\n");
+    std::printf("* formatting test *\n- %p %i32 %i64 %x32 %x64 %f32 %f64\n", cabi_main, (-1), (-1ll), (-1), (-1ull), -1.0f, -1.0);
 
     cabi_die();
 }
