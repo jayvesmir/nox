@@ -28,9 +28,6 @@ void main() {
 
 extern "C" {
 [[clang::noinline]] void cabi_mmain() {
-    if (csr::read<csr::CSR_M_HART_ID>() != 0)
-        cabi_die();
-
     init::clear_bss();
     init::setup_serial_console();
 
