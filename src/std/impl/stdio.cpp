@@ -20,7 +20,7 @@ namespace std {
             return 0;
         }
 
-        static void put_int(const char** fmt_it, bool sign, __builtin_va_list args, char* out_buf, uint64_t out_buf_size,
+        static void put_int(const char** fmt_it, bool sign, __builtin_va_list& args, char* out_buf, uint64_t out_buf_size,
                             const auto&... rest) {
             if (!sign) {
                 if (*(*fmt_it + 1) && *(*fmt_it + 2)) {
