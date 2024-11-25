@@ -2,5 +2,6 @@
 #include "std/cstdint"
 
 namespace std {
-    int32_t memcmp(const void* buf1, const void* buf2, uint64_t n);
+    void memset(void* buf, const uint8_t val, uint64_t n_bytes);
+    int32_t memcmp(const void* buf1, const void* buf2, uint64_t n_bytes);
 }

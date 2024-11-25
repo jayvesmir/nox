@@ -1,9 +1,11 @@
 #include "arch/csr.hpp"
 #include "arch/interrupts.hpp"
+#include "arch/memory.hpp"
 #include "arch/processor.hpp"
 #include "cabi.hpp"
 #include "std/cstdint"
 #include "std/cstdio"
+#include "std/cstring"
 #include "std/init.hpp"
 #include "util/cast.hpp"
 
@@ -11,12 +13,15 @@ namespace init {
     void clear_bss() {
         const auto start = reinterpret_cast<uint64_t*>(&cabi_bss_start);
         const auto end = reinterpret_cast<uint64_t*>(&cabi_bss_end);
+
+        // can't use memset here because it'd corrupt its own stack
         for (auto it = start; it < end; it++)
             *it = 0;
     }
 
-    void setup_serial_console() {
+    void everything() {
         std::init_stdio();
+        memory::init(reinterpret_cast<uint8_t*>(&cabi_ram_start), reinterpret_cast<uint8_t*>(&cabi_ram_end));
     }
 } // namespace init
 
@@ -24,13 +29,42 @@ void main() {
     std::printf("\n+ nox started +\n");
     std::printf("* formatting test *\n- %p %i32 %i64 %x32 %x64 %f32 %f64\n", main, (-1), (-1ll), (-1), (-1ull), -1.0f, -1.0);
 
+    std::printf("* page allocator test *\n\n");
+
+    constexpr auto n_test_pages = 16;
+
+    auto single = memory::linear::alloc(1);
+    std::printf("- allocated page: %p\n", single);
+
+    std::printf("\n");
+    memory::linear::detail::page_table.dump_to_console();
+    std::printf("\n");
+
+    auto many = memory::linear::alloc(n_test_pages);
+    std::printf("- allocated %i32 pages: %p\n\n", n_test_pages, many);
+
+    memory::linear::detail::page_table.dump_to_console();
+    std::printf("\n");
+
+    memory::linear::dealloc(single);
+    std::printf("- deallocated page: %p\n\n", single);
+
+    memory::linear::detail::page_table.dump_to_console();
+    std::printf("\n");
+
+    memory::linear::dealloc(many);
+    std::printf("- deallocated %i32 pages: %p\n\n", n_test_pages, many);
+
+    memory::linear::detail::page_table.dump_to_console();
+    std::printf("\n");
+
     cabi_die();
 }
 
 extern "C" {
 [[clang::noinline]] void cabi_mmain() {
     init::clear_bss();
-    init::setup_serial_console();
+    init::everything();
 
     // setup exception vectors
     csr::write<csr::CSR_M_TVEC>(util::ptr_to_addr(interrupt_handlers::machine_trap));
