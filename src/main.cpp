@@ -5,6 +5,7 @@
 #include "std/cstdint"
 #include "std/cstdio"
 #include "std/init.hpp"
+#include "util/cast.hpp"
 
 namespace init {
     void clear_bss() {
@@ -32,8 +33,8 @@ extern "C" {
     init::setup_serial_console();
 
     // setup exception vectors
-    csr::write<csr::CSR_M_TVEC>(reinterpret_cast<uintreg_t>(interrupt_handlers::machine_trap));
-    csr::write<csr::CSR_S_TVEC>(reinterpret_cast<uintreg_t>(interrupt_handlers::supervisor_trap));
+    csr::write<csr::CSR_M_TVEC>(util::ptr_to_addr(interrupt_handlers::machine_trap));
+    csr::write<csr::CSR_S_TVEC>(util::ptr_to_addr(interrupt_handlers::supervisor_trap));
 
     csr::set_bits<csr::CSR_M_STATUS>(3 << 11); // set MPP to supervisor
     csr::set_bits<csr::CSR_M_STATUS>(1 << 7); // enable machine interrupts
@@ -49,7 +50,7 @@ extern "C" {
         std::printf("* enabled V extension: VLEN=%i64\n", csr::read<csr::CSR_VLENB>() * 8);
     }
 
-    csr::write<csr::CSR_M_EPC>(reinterpret_cast<uintreg_t>(main));
+    csr::write<csr::CSR_M_EPC>(util::ptr_to_addr(main));
     asm volatile("mret");
 }
 }
