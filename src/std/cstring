@@ -2,6 +2,8 @@
 #include "std/cstdint"
 
 namespace std {
+    void memcpy(void* src, void* dst, uint64_t n_bytes);
+    void memmove(void* src, void* dst, uint64_t n_bytes);
     void memset(void* buf, const uint8_t val, uint64_t n_bytes);
     int32_t memcmp(const void* buf1, const void* buf2, uint64_t n_bytes);
 }

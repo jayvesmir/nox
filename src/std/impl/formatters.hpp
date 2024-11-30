@@ -1,6 +1,7 @@
 #pragma once
 #include "std/concepts"
 #include "std/cstdint"
+#include "std/cstring"
 
 namespace std {
     template <typename T> struct formatter {
@@ -17,7 +18,8 @@ namespace std {
             return '0' + (val % 16);
         }
 
-        uint64_t operator()(char* buf, uint64_t capacity, const T& value, uint32_t radix = 10, bool capital = false) {
+        uint64_t operator()(char* buf, uint64_t capacity, const T& value, uint32_t radix = 10, bool capital = false,
+                            int64_t min_length = 0) {
             uint64_t output_len = 0;
             T val = value;
 
@@ -35,6 +37,12 @@ namespace std {
             for (it = tmp; val != 0 && it != (tmp + 64); it++) {
                 *it = get_hex_digit(val % radix, capital);
                 val /= radix;
+            }
+
+            auto padding = min_length - (it - tmp);
+            if (padding > 0) {
+                std::memset(tmp + (it - tmp), '0', padding);
+                it += padding;
             }
 
             for (auto i = output_len; it != tmp && output_len <= capacity; i++) {

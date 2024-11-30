@@ -159,13 +159,15 @@ namespace std {
                 case 'p': {
                     char buf[int_strbuf_size] = {0};
                     std::puts("0x");
-                    std::puts_n(buf, std::format_to<uint64_t>(buf, sizeof(buf), __builtin_va_arg(args, uint64_t), 16));
+                    std::puts_n(buf, std::format_to<uint64_t>(buf, sizeof(buf), __builtin_va_arg(args, uint64_t), 16, false,
+                                                              sizeof(uintptr_t) * 2));
                 } break;
 
                 case 'P': {
                     char buf[int_strbuf_size] = {0};
                     std::puts("0x");
-                    std::puts_n(buf, std::format_to<uint64_t>(buf, sizeof(buf), __builtin_va_arg(args, uint64_t), 16, true));
+                    std::puts_n(buf, std::format_to<uint64_t>(buf, sizeof(buf), __builtin_va_arg(args, uint64_t), 16, true,
+                                                              sizeof(uintptr_t) * 2));
                 } break;
 
                 case 'f': {
