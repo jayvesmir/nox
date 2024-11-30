@@ -4,10 +4,8 @@
 #include "std/cstring"
 #include "util/cast.hpp"
 
-#pragma clang optimize off
-
 namespace memory {
-    namespace linear {
+    namespace page {
         namespace detail {
             uint8_t* mem_start = nullptr;
             uint8_t* mem_end = nullptr;
@@ -130,5 +128,5 @@ namespace memory {
 
             return detail::page_table.pte_to_page(free_ptes);
         }
-    } // namespace linear
+    } // namespace page
 } // namespace memory

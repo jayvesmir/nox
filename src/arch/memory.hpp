@@ -4,7 +4,7 @@
 namespace memory {
     void init(uint8_t* begin, uint8_t* end);
 
-    namespace linear {
+    namespace page {
         constexpr auto page_size = 4096;
 
         namespace detail {
@@ -21,8 +21,8 @@ namespace memory {
                 pte* pages;
                 uintptr_t total_pages;
 
-                void* pte_to_page(pte* entry);
                 pte* page_to_pte(void* ptr);
+                void* pte_to_page(pte* entry);
                 pte* find_allocation_end(pte* entry);
                 pte* find_free_range(uint64_t n_pages);
 
@@ -38,6 +38,5 @@ namespace memory {
 
         void dealloc(void* ptr);
         void* alloc(uint64_t n_pages);
-
-    } // namespace linear
+    } // namespace page
 } // namespace memory

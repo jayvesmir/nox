@@ -23,40 +23,46 @@ namespace init {
         std::init_stdio();
         memory::init(reinterpret_cast<uint8_t*>(&cabi_ram_start), reinterpret_cast<uint8_t*>(&cabi_ram_end));
     }
+
+    // not actually testing anything, but if something is wrong you'll see it in the output yourself
+    void run_tests() {
+        std::printf("* formatting test *\n- %p %i32 %i64 %x32 %x64 %f32 %f64\n", cabi_entry, (-1), (-1ll), (-1), (-1ull), -1.0f,
+                    -1.0);
+
+        std::printf("* page allocator test *\n\n");
+
+        constexpr auto n_test_pages = 16;
+
+        auto single = memory::page::alloc(1);
+        std::printf("- allocated page: %p\n", single);
+
+        std::printf("\n");
+        memory::page::detail::page_table.dump_to_console();
+        std::printf("\n");
+
+        auto many = memory::page::alloc(n_test_pages);
+        std::printf("- allocated %i32 pages: %p\n\n", n_test_pages, many);
+
+        memory::page::detail::page_table.dump_to_console();
+        std::printf("\n");
+
+        memory::page::dealloc(single);
+        std::printf("- deallocated page: %p\n\n", single);
+
+        memory::page::detail::page_table.dump_to_console();
+        std::printf("\n");
+
+        memory::page::dealloc(many);
+        std::printf("- deallocated %i32 pages: %p\n\n", n_test_pages, many);
+
+        memory::page::detail::page_table.dump_to_console();
+        std::printf("\n");
+    }
 } // namespace init
 
 void main() {
     std::printf("\n+ nox started +\n");
-    std::printf("* formatting test *\n- %p %i32 %i64 %x32 %x64 %f32 %f64\n", main, (-1), (-1ll), (-1), (-1ull), -1.0f, -1.0);
-
-    std::printf("* page allocator test *\n\n");
-
-    constexpr auto n_test_pages = 16;
-
-    auto single = memory::linear::alloc(1);
-    std::printf("- allocated page: %p\n", single);
-
-    std::printf("\n");
-    memory::linear::detail::page_table.dump_to_console();
-    std::printf("\n");
-
-    auto many = memory::linear::alloc(n_test_pages);
-    std::printf("- allocated %i32 pages: %p\n\n", n_test_pages, many);
-
-    memory::linear::detail::page_table.dump_to_console();
-    std::printf("\n");
-
-    memory::linear::dealloc(single);
-    std::printf("- deallocated page: %p\n\n", single);
-
-    memory::linear::detail::page_table.dump_to_console();
-    std::printf("\n");
-
-    memory::linear::dealloc(many);
-    std::printf("- deallocated %i32 pages: %p\n\n", n_test_pages, many);
-
-    memory::linear::detail::page_table.dump_to_console();
-    std::printf("\n");
+    init::run_tests();
 
     cabi_die();
 }

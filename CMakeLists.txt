@@ -5,6 +5,7 @@ project(
     LANGUAGES CXX ASM
 )
 
+set(CMAKE_CXX_SCAN_FOR_MODULES false)
 set(CMAKE_EXPORT_COMPILE_COMMANDS true)
 
 add_subdirectory(src main)
