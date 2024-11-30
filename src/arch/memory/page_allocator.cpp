@@ -41,7 +41,7 @@ namespace memory {
                     return nullptr;
 
                 while (entry < pages + total_pages) {
-                    if (entry->flags & pte_bits::last || entry->flags == 0)
+                    if (entry->flags & pte::last || entry->flags == 0)
                         break;
 
                     entry++;
@@ -78,7 +78,7 @@ namespace memory {
                 auto free_pages = total_pages;
 
                 for (auto base_i = 0ull; base_i < total_pages; base_i++) {
-                    if ((pages[base_i].flags & pte_bits::used) == 0)
+                    if ((pages[base_i].flags & pte::used) == 0)
                         continue;
 
                     auto start_i = base_i;
@@ -86,7 +86,7 @@ namespace memory {
                     std::printf("%p -> ", pte_to_page(&pages[base_i]));
 
                     for (; base_i < total_pages; base_i++) {
-                        if (pages[base_i].flags & pte_bits::last) {
+                        if (pages[base_i].flags & pte::last) {
                             std::printf("%p (%u64 pages)", pte_to_page(&pages[base_i]), base_i - start_i + 1);
                             free_pages -= base_i - start_i + 1;
                             break;
@@ -106,7 +106,7 @@ namespace memory {
             }
         } // namespace detail
 
-        void dealloc(void* ptr) {
+        void deallocate_page(void* ptr) {
             auto allocation_start = detail::page_table.page_to_pte(ptr);
             auto allocation_end = detail::page_table.find_allocation_end(allocation_start);
 
@@ -114,7 +114,7 @@ namespace memory {
                 allocation_start++->flags = 0;
         }
 
-        void* alloc(uint64_t n_pages) {
+        void* allocate_page(uint64_t n_pages) {
             auto free_ptes = detail::page_table.find_free_range(n_pages);
             if (!free_ptes)
                 return nullptr;
@@ -122,9 +122,9 @@ namespace memory {
             auto page_it = free_ptes;
             const auto range_end = free_ptes + n_pages;
             while (page_it < range_end)
-                page_it++->flags |= detail::pte_bits::used;
+                page_it++->flags |= detail::pte::used;
 
-            (page_it - 1)->flags |= detail::pte_bits::last;
+            (page_it - 1)->flags |= detail::pte::last;
 
             return detail::page_table.pte_to_page(free_ptes);
         }

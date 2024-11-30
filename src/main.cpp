@@ -33,26 +33,26 @@ namespace init {
 
         constexpr auto n_test_pages = 16;
 
-        auto single = memory::page::alloc(1);
+        auto single = memory::page::allocate_page(1);
         std::printf("- allocated page: %p\n", single);
 
         std::printf("\n");
         memory::page::detail::page_table.dump_to_console();
         std::printf("\n");
 
-        auto many = memory::page::alloc(n_test_pages);
+        auto many = memory::page::allocate_page(n_test_pages);
         std::printf("- allocated %i32 pages: %p\n\n", n_test_pages, many);
 
         memory::page::detail::page_table.dump_to_console();
         std::printf("\n");
 
-        memory::page::dealloc(single);
+        memory::page::deallocate_page(single);
         std::printf("- deallocated page: %p\n\n", single);
 
         memory::page::detail::page_table.dump_to_console();
         std::printf("\n");
 
-        memory::page::dealloc(many);
+        memory::page::deallocate_page(many);
         std::printf("- deallocated %i32 pages: %p\n\n", n_test_pages, many);
 
         memory::page::detail::page_table.dump_to_console();
