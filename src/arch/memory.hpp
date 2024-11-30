@@ -35,12 +35,10 @@ namespace memory {
         constexpr auto page_size = 4096;
 
         void deallocate_page(void* ptr);
-        void* allocate_page(uint64_t n_pages);
+        void* allocate_pages(uint64_t n_pages);
     } // namespace page
 
-    namespace sv39 {
-        
-    }
+    namespace sv39 {}
 
     void init(uint8_t* begin, uint8_t* end);
 } // namespace memory
